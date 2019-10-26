@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import os
+import shutil
+from module_scripts import apt
+
+cwd = os.getcwd()
+
+
+
+try:
+
+    os.mkdir( cwd + "/playbook" )
+    os.mkdir( cwd + "/playbook/source" )
+
+    os.mkdir( cwd + "/playbook/roles" )
+    os.mkdir( cwd + "/playbook/roles/main" )
+    os.mkdir( cwd + "/playbook/roles/main/tasks" )
+
+except:
+    pass
+
+
+history_file = "/home/andrew/.bash_history"
+
+shutil.rmtree(cwd + '/playbook')
+create_playbook(cwd)
+apt.apt(history_file,cwd)

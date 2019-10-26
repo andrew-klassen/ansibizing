@@ -1,0 +1,6 @@
+- name: install dependencies
+  apt:
+    name:
+      - ansible
+      - tigervnc-standalone-server
+    state: latest
