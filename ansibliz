@@ -3,26 +3,46 @@
 import os
 import shutil
 from module_scripts import apt
+from module_scripts import write_main_playbook
+from module_scripts import write_config
+from module_scripts import write_hosts
+from module_scripts import git
 
 cwd = os.getcwd()
 
-
-
+# delete existing ansible workspace if one exists
 try:
-
-    os.mkdir( cwd + "/playbook" )
-    os.mkdir( cwd + "/playbook/source" )
-
-    os.mkdir( cwd + "/playbook/roles" )
-    os.mkdir( cwd + "/playbook/roles/main" )
-    os.mkdir( cwd + "/playbook/roles/main/tasks" )
-
+    shutil.rmtree(cwd + '/playbook')
 except:
     pass
 
+# create ansible directory stucture
+os.mkdir( cwd + "/playbook" )
+os.mkdir( cwd + "/playbook/source" )
+os.mkdir( cwd + "/playbook/roles" )
+os.mkdir( cwd + "/playbook/roles/main" )
+os.mkdir( cwd + "/playbook/roles/main/tasks" )
 
 history_file = "/home/andrew/.bash_history"
 
-shutil.rmtree(cwd + '/playbook')
-create_playbook(cwd)
+# create playbook and config files
+write_main_playbook.create_playbook(cwd)
+write_config.create_config(cwd)
+write_hosts.create_hosts(cwd)
+
+# write main role
+
+# prefix
+file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+file_object.write("---\n")
+file_object.write("\n")
+file_object.close()
+
 apt.apt(history_file,cwd)
+git.git_clone(history_file,cwd)
+
+# postfix
+file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+file_object.write("---")
+file_object.close()
+

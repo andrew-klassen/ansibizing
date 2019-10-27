@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
-from pprint import pprint
 
 def apt(history_file,cwd):
 
+    # lines in the .bash_history file into an array, one element per line
     lines = [line.rstrip('\n') for line in open(history_file)]
     packages = list()
-
     apt_packages = lines
 
+    # remove non apt elements"
     for i in list(apt_packages):
         if "apt install" not in i and "apttitude install" not in i:
             apt_packages.remove(i)
 
+    # array of words specific to apt and not a package
     apt_args = [ 'apt', 'install', 'apttitude']
 
+    # parse through every line
     for i in range(len(apt_packages)):
         line_args = apt_packages[i].split()
 
@@ -23,16 +25,16 @@ def apt(history_file,cwd):
             if not res:
                 packages.append(line_args[j])
 
-    history_file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-
-    history_file_object.write("- name: install dependencies\n")
-    history_file_object.write("  apt:\n")
-    history_file_object.write("    name:\n")
+    # write to playbook
+    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+    file_object.write("- name: install dependencies\n")
+    file_object.write("  apt:\n")
+    file_object.write("    name:\n")
 
     for i in range(len(packages)):
-        history_file_object.write("      - " + packages[i] + "\n")
+        file_object.write("      - " + packages[i] + "\n")
 
-    history_file_object.write("    state: latest\n")
-    history_file_object.write("\n")
+    file_object.write("    state: latest\n")
+    file_object.write("\n")
+    file_object.close()
 
-    history_file_object.close()
