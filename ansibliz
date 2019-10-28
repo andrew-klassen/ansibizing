@@ -26,7 +26,7 @@ os.mkdir( cwd + "/playbook/roles" )
 os.mkdir( cwd + "/playbook/roles/main" )
 os.mkdir( cwd + "/playbook/roles/main/tasks" )
 
-history_file = "/home/andrew/.bash_history"
+history_file = "/home/applebyco.com/aklassenadmin/.bash_history"
 
 # create playbook and config files
 write_main_playbook.create_playbook(cwd)
@@ -46,6 +46,7 @@ git.git_clone(history_file,cwd)
 copy.copy_config(history_file,cwd)
 service.service_systemctl(history_file,cwd)
 file.file_set_permissions_chmod(history_file,cwd)
+file.file_set_permissions_chown(history_file,cwd)
 
 # postfix
 file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
