@@ -7,6 +7,9 @@ from module_scripts import write_main_playbook
 from module_scripts import write_config
 from module_scripts import write_hosts
 from module_scripts import git
+from module_scripts import copy
+from module_scripts import service
+from module_scripts import file
 
 cwd = os.getcwd()
 
@@ -40,6 +43,9 @@ file_object.close()
 
 apt.apt(history_file,cwd)
 git.git_clone(history_file,cwd)
+copy.copy_config(history_file,cwd)
+service.service_systemctl(history_file,cwd)
+file.file_set_permissions_chmod(history_file,cwd)
 
 # postfix
 file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")

@@ -1,9 +1,0 @@
----
-
-- hosts: server
-  become: true
-  gather_facts: no
-  roles:
-   - main
-
----

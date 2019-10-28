@@ -27,6 +27,12 @@ def apt(history_file,cwd):
 
     # write to playbook
     file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+    file_object.write("- name: update apt cache\n")
+    file_object.write("  apt:\n")
+    file_object.write("    update_cache: yes\n")
+    file_object.write("    cache_valid_time: 3600\n")
+    file_object.write("\n")
+
     file_object.write("- name: install dependencies\n")
     file_object.write("  apt:\n")
     file_object.write("    name:\n")

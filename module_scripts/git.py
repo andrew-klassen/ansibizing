@@ -39,7 +39,7 @@ def git_clone(history_file,cwd):
     file_object.write("  with_items:\n")
     
     for i in range(len(repos)):
-        file_object.write("     - { src: \"" + repos[i] + "\", dest: \"" + destionations[i] + "\" }\n")
+        file_object.write("    - { src: \"" + repos[i] + "\", dest: \"" + destionations[i] + "\" }\n")
 
     file_object.write("\n")
     file_object.close()
