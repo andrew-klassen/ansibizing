@@ -4,6 +4,7 @@
 import os
 import shutil
 
+from module_scripts.web_download import *
 from module_scripts.config import *
 from module_scripts.apt import *
 from module_scripts.write_main_playbook import *
@@ -14,7 +15,7 @@ from module_scripts.copy import *
 from module_scripts.service import *
 from module_scripts.file import *
 from module_scripts.web_download import * 
-
+from module_scripts.general_functions import *
 
 # delete existing ansible workspace if one exists
 try:
@@ -22,6 +23,8 @@ try:
 except:
     pass
 
+current_directory(lines, 5)
+exit()
 
 # create ansible directory stucture
 os.mkdir( cwd + "/playbook" )
@@ -45,6 +48,7 @@ file_object.close()
 
 apt(lines,cwd)
 git_clone(lines,cwd)
+wget(lines,cwd)
 
 copy_config(lines,cwd)
 service_systemctl(lines,cwd)

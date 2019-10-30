@@ -24,7 +24,7 @@ def wget(lines,cwd):
         line_args = wget_lines[i].split()
 
         for j in range(len(line_args)):
-            res = [ element for element in apt_args if(element in line_args[j])]
+            res = [ element for element in wget_args if(element in line_args[j])]
             if not res and "http" in line_args[j]:
                 locations.append(line_args[j])
 
