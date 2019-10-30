@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import pprint
 
 def service_systemctl(history_file,cwd):
 
@@ -9,7 +8,7 @@ def service_systemctl(history_file,cwd):
     service_names = list()
     service_lines = lines
 
-    # remove non apt elements"
+    # remove non systemctl lines
     for i in list(service_lines):
         if "systemctl" not in i or "status" in i:
             service_lines.remove(i)
@@ -20,11 +19,10 @@ def service_systemctl(history_file,cwd):
         temp = temp.replace(".service","")
         service_names.append(temp)
 
-    # write to playbook
-    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-    
+    # boolean flags for loop
     enable_found = False
     disable_found = False
+
     for i in range(len(service_names)):
         for j in range(len(service_lines)):
             if service_names[i] in service_lines[j] and "enable" in service_lines[j]:
@@ -33,6 +31,19 @@ def service_systemctl(history_file,cwd):
             elif service_names[i] in service_lines[j] and "disable" in service_lines[j]:
                 disable_found = True
                 break
+
+        playbook_lines = [line.rstrip('\n') for line in open(cwd + "/playbook/roles/main/tasks/main.yml")]
+        service_exists = False
+        for j in range(len(playbook_lines)):
+            if service_names[i] in playbook_lines[j]:
+                service_exists = True
+                break
+
+        if service_exists:
+            continue
+
+        # write to playbook, playbook is read each type to check and see if service was already added
+        file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
 
         file_object.write("- name: service " + service_names[i] +"\n")
         file_object.write("  service:\n")
@@ -50,4 +61,5 @@ def service_systemctl(history_file,cwd):
             file_object.write("    state: restarted\n")
 
         file_object.write("\n")
+        file_object.close()
 

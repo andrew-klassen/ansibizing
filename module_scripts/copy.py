@@ -17,6 +17,8 @@ def copy_config(history_file,cwd):
         if not res:
             file_changes.remove(i)
 
+    if not file_changes:
+        return None
 
     # parse through every line
     for i in range(len(file_changes)):

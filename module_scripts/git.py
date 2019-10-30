@@ -14,6 +14,9 @@ def git_clone(history_file,cwd):
         if "git clone" not in i:
             git_lines.remove(i)
 
+    if not git_lines:
+        return None
+
     git_args = [ 'git', 'clone' ]
 
     # parse through every line

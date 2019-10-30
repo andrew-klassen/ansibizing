@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import pprint
 import os
 import re
 
@@ -9,15 +8,23 @@ def file_set_permissions_chmod(history_file,cwd):
     # lines in the .bash_history file into an array, one element per line
     lines = [line.rstrip('\n') for line in open(history_file)]
     file_permission_lines = lines
+
+    # boolean array, if chmod was recursive
     files_recurse = list()
     files = list()
+
+    # numerical form of chmod permissions 
     file_permissions = list()
 
     for i in list(file_permission_lines):
         if "chmod" not in i:
             file_permission_lines.remove(i)
 
-    # array of words specific to apt and not a package
+    # exit if no chmod
+    if not file_permission_lines:
+        return None
+
+    # array of arguments specific to chmod
     chmod_args = [ 'chmod', "-R" ]
 
     # parse through every line
@@ -31,6 +38,7 @@ def file_set_permissions_chmod(history_file,cwd):
             if line_args[j].isdigit():
                 file_permissions.append(line_args[j])
                 continue
+
             elif "-R" in line_args[j]:
                 recurse = True
                 
@@ -76,11 +84,13 @@ def file_set_permissions_chown(history_file,cwd):
         if "chown" not in i:
             file_permission_lines.remove(i)
 
-    # array of words specific to apt and not a package
+    if not file_permission_lines:
+        return None
+
+    # array of words specific to chown
     chmod_args = [ 'chown', "-R" ]
 
     # parse through every line
-
     for i in range(len(file_permission_lines)):
         line_args = file_permission_lines[i].split()
 
@@ -108,7 +118,6 @@ def file_set_permissions_chown(history_file,cwd):
 
         files_recurse.append(recurse)
 
-    
     # write to playbook
     file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
 
@@ -129,8 +138,4 @@ def file_set_permissions_chown(history_file,cwd):
         file_object.write("\n")
 
     file_object.close()
-
-
-
-
 

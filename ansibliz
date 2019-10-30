@@ -10,6 +10,7 @@ from module_scripts import git
 from module_scripts import copy
 from module_scripts import service
 from module_scripts import file
+from module_scripts import web_download 
 
 cwd = os.getcwd()
 

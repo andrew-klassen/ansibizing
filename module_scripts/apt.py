@@ -8,10 +8,14 @@ def apt(history_file,cwd):
     packages = list()
     apt_packages = lines
 
-    # remove non apt elements"
+    # remove non apt elements
     for i in list(apt_packages):
         if "apt install" not in i and "apttitude install" not in i:
             apt_packages.remove(i)
+
+    # end function if apt is not used
+    if not apt_packages:
+        return None
 
     # array of words specific to apt and not a package
     apt_args = [ 'apt', 'install', 'apttitude']
@@ -24,6 +28,9 @@ def apt(history_file,cwd):
             res = [ element for element in apt_args if(element in line_args[j])]
             if not res:
                 packages.append(line_args[j])
+
+    # remove duplicate packages
+    packages = list(dict.fromkeys(packages))
 
     # write to playbook
     file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
