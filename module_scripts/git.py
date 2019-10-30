@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 
-def git_clone(history_file,cwd):
+import copy
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
-    git_lines = lines
+def git_clone(lines,cwd):
+
+    git_lines = copy.deepcopy(lines)
     repos = list()
     destionations = list()
 

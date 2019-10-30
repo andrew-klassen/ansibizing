@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
+
 import pprint
 
-def wget(history_file,cwd):
+def wget(lines,cwd):
     
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
     wget_lines = lines
     locations = list()
 

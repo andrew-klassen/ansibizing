@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 
-def apt(history_file,cwd):
+import copy
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
+def apt(lines,cwd):
+
     packages = list()
-    apt_packages = lines
+    apt_packages = copy.deepcopy(lines)
 
     # remove non apt elements
     for i in list(apt_packages):

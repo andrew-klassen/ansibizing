@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
+
 import os
 import re
+import copy
 
-def file_set_permissions_chmod(history_file,cwd):
+def file_set_permissions_chmod(lines,cwd):
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
-    file_permission_lines = lines
+    file_permission_lines = copy.deepcopy(lines)
 
     # boolean array, if chmod was recursive
     files_recurse = list()
@@ -69,11 +69,9 @@ def file_set_permissions_chmod(history_file,cwd):
     file_object.close()
 
 
-def file_set_permissions_chown(history_file,cwd):
+def file_set_permissions_chown(lines,cwd):
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
-    file_permission_lines = lines
+    file_permission_lines = copy.deepcopy(lines)
     files_recurse = list()
     files = list()
     file_users = list()

@@ -8,3 +8,4 @@ def create_hosts(cwd):
     file_object.write("127.0.0.1\n")
 
     file_object.close()
+

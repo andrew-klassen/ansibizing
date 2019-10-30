@@ -11,3 +11,4 @@ def create_config(cwd):
     file_object.write("remote_tmp = /tmp/.ansible-${USER}/tmp\n")
 
     file_object.close()
+

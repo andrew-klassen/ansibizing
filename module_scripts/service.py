@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 
-def service_systemctl(history_file,cwd):
+import copy
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
+def service_systemctl(lines,cwd):
+
     service_names = list()
-    service_lines = lines
+    service_lines = copy.deepcopy(lines)
 
     # remove non systemctl lines
     for i in list(service_lines):

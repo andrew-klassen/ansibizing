@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
+
 import shutil
+import copy
 
-def copy_config(history_file,cwd):
+def copy_config(lines,cwd):
 
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
     files = list()
-    file_changes = lines
+    file_changes = copy.deepcopy(lines)
 
     text_editor_args = [ 'vim', 'nano', 'emacs']
 
