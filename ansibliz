@@ -16,15 +16,13 @@ from module_scripts.service import *
 from module_scripts.file import *
 from module_scripts.web_download import * 
 from module_scripts.general_functions import *
+from module_scripts.unarchive import *
 
 # delete existing ansible workspace if one exists
 try:
     shutil.rmtree(cwd + '/playbook')
 except:
     pass
-
-current_directory(lines, 5)
-exit()
 
 # create ansible directory stucture
 os.mkdir( cwd + "/playbook" )
@@ -49,14 +47,16 @@ file_object.close()
 apt(lines,cwd)
 git_clone(lines,cwd)
 wget(lines,cwd)
+curl(lines,cwd)
+tar(lines,cwd)
 
 copy_config(lines,cwd)
-service_systemctl(lines,cwd)
 file_set_permissions_chmod(lines,cwd)
 file_set_permissions_chown(lines,cwd)
+service_systemctl(lines,cwd)
 
 # postfix
 file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-file_object.write("---")
+file_object.write("...")
 file_object.close()
 

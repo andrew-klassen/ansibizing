@@ -15,6 +15,6 @@ def create_playbook(cwd):
     file_object.write("  roles:\n")
     file_object.write("   - main\n")
     file_object.write("\n")
-    file_object.write("---")
+    file_object.write("...")
     file_object.close()
 
