@@ -137,3 +137,27 @@ def file_set_permissions_chown(lines,cwd):
 
     file_object.close()
 
+
+def mkdir():
+    mkdir_lines = copy.deepcopy(lines)
+
+    # remove non mkdir lines
+    for i in list(mkdir_lines):
+        if "mkdir " not in i:
+            mkdir_lines.remove(i)
+
+    if not apt_packages:
+        return None
+
+
+
+
+
+
+
+
+
+
+
+
+
