@@ -5,7 +5,7 @@ import os
 import re
 import copy
 
-def file_set_permissions_chmod(lines,cwd):
+def chmod(lines,cwd):
 
     file_permission_lines = copy.deepcopy(lines)
 
@@ -69,7 +69,7 @@ def file_set_permissions_chmod(lines,cwd):
     file_object.close()
 
 
-def file_set_permissions_chown(lines,cwd):
+def chown(lines,cwd):
 
     file_permission_lines = copy.deepcopy(lines)
     files_recurse = list()
@@ -138,26 +138,44 @@ def file_set_permissions_chown(lines,cwd):
     file_object.close()
 
 
-def mkdir():
+def mkdir(lines,cwd):
     mkdir_lines = copy.deepcopy(lines)
+    mkdir_files = list()
 
     # remove non mkdir lines
     for i in list(mkdir_lines):
         if "mkdir " not in i:
             mkdir_lines.remove(i)
 
-    if not apt_packages:
+    if not mkdir_lines:
         return None
+    
+    # array of words specific to apt and not a package
+    mkdir_args = [ 'mkdir']
+
+    for i in range(len(mkdir_lines)):
+        line_args = mkdir_lines[i].split()
+
+        for j in range(len(line_args)):
+            res = [ element for element in mkdir_args if(element in line_args[j])]
+            if not res:
+                mkdir_files.append(line_args[j])
+
+    mkdir_files  = list(dict.fromkeys(mkdir_files))
 
 
+    # write to playbook
+    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
 
+    file_object.write("- name: create directories\n")
+    file_object.write("  file:\n")
+    file_object.write("    path: \"{{ item }}\"\n")
+    file_object.write("    state: directory\n")
+    file_object.write("  with_items\n")
 
+    for i in range(len(mkdir_files)):
+        file_object.write("    - " + mkdir_files[i] +"\n")
 
-
-
-
-
-
-
-
+    file_object.write("\n")
+    file_object.close()
 

@@ -2,6 +2,8 @@
 
 
 import copy
+import subprocess
+import os
 from os.path import expanduser
 
 # function return current path at the time for a given line number
@@ -63,4 +65,13 @@ def locate_line (lines, line):
     for i in range(len(lines)):
         if line in lines[i]:
             return i + 1
+
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files or name in dirs:
+            return os.path.join(root, name)
+
+
+def prep(cwd):
+    print("test")    
 

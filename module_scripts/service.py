@@ -3,7 +3,7 @@
 
 import copy
 
-def service_systemctl(lines,cwd):
+def systemctl(lines,cwd):
 
     service_names = list()
     service_lines = copy.deepcopy(lines)

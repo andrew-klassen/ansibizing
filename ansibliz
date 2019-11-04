@@ -3,8 +3,8 @@
 
 import os
 import shutil
+import argparse
 
-from module_scripts.web_download import *
 from module_scripts.config import *
 from module_scripts.apt import *
 from module_scripts.write_main_playbook import *
@@ -18,45 +18,63 @@ from module_scripts.web_download import *
 from module_scripts.general_functions import *
 from module_scripts.unarchive import *
 
-# delete existing ansible workspace if one exists
-try:
-    shutil.rmtree(cwd + '/playbook')
-except:
-    pass
 
-# create ansible directory stucture
-os.mkdir( cwd + "/playbook" )
-os.mkdir( cwd + "/playbook/source" )
-os.mkdir( cwd + "/playbook/roles" )
-os.mkdir( cwd + "/playbook/roles/main" )
-os.mkdir( cwd + "/playbook/roles/main/tasks" )
+actions = ["create", "prep"]
+action_descriptions = ["prep - parses through history and removes invalid commands", 
+                       "create - creates the ansible playbook"]
 
-# create playbook and config files
-create_playbook(cwd)
-create_config(cwd)
-create_hosts(cwd)
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("action", type=str, choices=actions, help="This tells the script what to do. The following actions are available.\n\n" +"\n".join(action_descriptions),  metavar="action")
+parser.add_argument("-u", "--user", type=str, help="bash user whos history should be used, by default its root's")
 
-# write main role
+args = parser.parse_args()
 
-# prefix
-file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-file_object.write("---\n")
-file_object.write("\n")
-file_object.close()
+lines = set_history(args.user)
 
-apt(lines,cwd)
-git_clone(lines,cwd)
-wget(lines,cwd)
-curl(lines,cwd)
-tar(lines,cwd)
+if args.action == "create":
+    # delete existing ansible workspace if one exists
+    try:
+        shutil.rmtree(cwd + "/playbook")
+    except:
+        pass
 
-copy_config(lines,cwd)
-file_set_permissions_chmod(lines,cwd)
-file_set_permissions_chown(lines,cwd)
-service_systemctl(lines,cwd)
+    # create ansible directory stucture
+    os.mkdir( cwd + "/playbook" )
+    os.mkdir( cwd + "/playbook/source" )
+    os.mkdir( cwd + "/playbook/roles" )
+    os.mkdir( cwd + "/playbook/roles/main" )
+    os.mkdir( cwd + "/playbook/roles/main/tasks" )
 
-# postfix
-file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-file_object.write("...")
-file_object.close()
+    # create playbook and config files
+    create_playbook(cwd)
+    create_config(cwd)
+    create_hosts(cwd)
 
+    # write main role
+
+    # prefix
+    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+    file_object.write("---\n")
+    file_object.write("\n")
+    file_object.close()
+
+    apt(lines,cwd)
+    mkdir(lines,cwd)
+    git_clone(lines,cwd)
+    wget(lines,cwd)
+    curl(lines,cwd)
+    tar(lines,cwd)
+
+    copy_config(lines,cwd)
+    chmod(lines,cwd)
+    chown(lines,cwd)
+    systemctl(lines,cwd)
+
+    # postfix
+    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+    file_object.write("...")
+    file_object.close()
+
+elif args.action == "prep":
+    prep(cwd)
+    
