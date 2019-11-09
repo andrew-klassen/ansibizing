@@ -58,6 +58,8 @@ if args.action == "create":
     file_object.write("\n")
     file_object.close()
 
+    apt_key_add(lines,cwd)
+    ppa_add(lines,cwd)
     apt(lines,cwd)
     mkdir(lines,cwd)
     git_clone(lines,cwd)

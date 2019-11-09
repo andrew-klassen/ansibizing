@@ -171,7 +171,7 @@ def mkdir(lines,cwd):
     file_object.write("  file:\n")
     file_object.write("    path: \"{{ item }}\"\n")
     file_object.write("    state: directory\n")
-    file_object.write("  with_items\n")
+    file_object.write("  with_items:\n")
 
     for i in range(len(mkdir_files)):
         file_object.write("    - " + mkdir_files[i] +"\n")
