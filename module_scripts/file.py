@@ -5,6 +5,7 @@ import os
 import re
 import copy
 
+
 def chmod(lines,cwd):
 
     file_permission_lines = copy.deepcopy(lines)

@@ -4,6 +4,7 @@
 import shutil
 import copy
 
+
 def copy_config(lines,cwd):
 
     files = list()

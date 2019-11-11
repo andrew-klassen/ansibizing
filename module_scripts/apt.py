@@ -2,8 +2,6 @@
 
 
 import copy
-import pprint
-
 
 
 def apt_key_add(lines,cwd):
@@ -18,10 +16,10 @@ def apt_key_add(lines,cwd):
         if "apt-key" not in i:
             apt_key_lines.remove(i)
 
+    # end function if apt-key was not used
     if not apt_key_lines:
         return None
 
-    #apt_key_args = [ 'apt-key' ]
 
     for i in range(len(apt_key_lines)):
         line_args = apt_key_lines[i].split()
@@ -35,42 +33,40 @@ def apt_key_add(lines,cwd):
                 apt_keys_id.append(line_args[j + 1])
 
 
-    # remove duplicate packages
+    # remove duplicate urls
     apt_keys_url = list(dict.fromkeys(apt_keys_url))
 
-    pprint.pprint(apt_keys_url)
-    print()
-    pprint.pprint(apt_keys_keyserver)
-    print()
-    pprint.pprint(apt_keys_id)
+    # add gpg keys added by url
+    if apt_keys_url:
+
+        file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+
+        file_object.write("- name: add gpg keys by url\n")
+        file_object.write("  apt_key:\n")
+        file_object.write("    url: \"{{ item }}\"\n")
+        file_object.write("  with_items:\n")
+
+        for i in range(len(apt_keys_url)):
+            file_object.write("    - " + apt_keys_url[i] + "\n")
+
+        file_object.write("\n")
+
+    # add gpg keys by keyserver
+    if apt_key_keyserver:
+
+        file_object.write("- name: add gpg keys by keyserver and id\n")
+        file_object.write("  apt_key:\n")
+        file_object.write("    keyserver: \"{{ item.keyserver }}\"\n")
+        file_object.write("    id: \"{{ item.id }}\"\n")
+        file_object.write("  with_items:\n")
+
+        for i in range(len(apt_keys_keyserver)):
+            file_object.write("    - { keyserver: \"" + apt_keys_keyserver[i] + "\", id: \"" + apt_keys_id[i] + "\" }\n")
+
+        file_object.write("\n")
 
 
-    file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
-
-    file_object.write("- name: add gpg keys by url\n")
-    file_object.write("  apt_key:\n")
-    file_object.write("    url: \"{{ item }}\"\n")
-    file_object.write("  with_items:\n")
-
-    for i in range(len(apt_keys_url)):
-        file_object.write("    - " + apt_keys_url[i] + "\n")
-
-    file_object.write("\n")
-
-
-
-    file_object.write("- name: add gpg keys by keyserver and id\n")
-    file_object.write("  apt_key:\n")
-    file_object.write("    keyserver: \"{{ item.keyserver }}\"\n")
-    file_object.write("    id: \"{{ item.id }}\"\n")
-    file_object.write("  with_items:\n")
-
-
-    for i in range(len(apt_keys_keyserver)):
-        file_object.write("    - { keyserver: \"" + apt_keys_keyserver[i] + "\", id: \"" + apt_keys_id[i] + "\" }\n")
-
-    file_object.write("\n")
-
+    file_object.close()
 
 
 def ppa_add(lines,cwd):
@@ -110,8 +106,7 @@ def ppa_add(lines,cwd):
 
     file_object.write("\n")
 
-    pprint.pprint(ppas)
-
+    file_object.close()
 
 
 def apt(lines,cwd):

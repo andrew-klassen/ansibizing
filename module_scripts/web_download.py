@@ -4,6 +4,7 @@
 import copy
 from .general_functions import *
 
+
 def wget(lines,cwd):
     
     wget_lines = copy.deepcopy(lines)

@@ -2,8 +2,8 @@
 
 
 def create_playbook(cwd):
-    file_object = open(cwd + "/playbook/main.yml", "a+")
 
+    file_object = open(cwd + "/playbook/main.yml", "a+")
 
     file_object.write("---\n")
     file_object.write("\n")
