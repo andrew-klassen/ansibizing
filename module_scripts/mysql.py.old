@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+import copy
+import pprint
+import hashlib
+
+class users:
+    def __init__(username, host, password = None, grants = None, database_and_tables = None, grant_option = False):
+        self.__username = username
+        self.__host = host
+        self.__password = password
+        self.__password_hash = None
+        if password != None:
+            self.__password = password
+            self.__password_hash = "*" + hashlib.sha1(self.__password.encode()).hexdigest().upper()
+
+    def myfunc(self):
+        print("Hello my name is " + self.name)
+
+def mysql_users(lines,cwd):
+
+    create_lines = copy.deepcopy(lines)
+    grant_lines = copy.deepcopy(create_lines)
+
+
+    for i in list(create_lines):
+        if not i.lower().startswith("create user"):
+            create_lines.remove(i)
+
+
+    for i in list(grant_lines):
+        if not i.lower().startswith("grant"):
+            grant_lines.remove(i)
+
+
+    users = list()
+
+
+    for i in range(len(create_lines)):
+
+        username = create_lines[i].split("@")[0].split(" ")[2].replace("'", "").replace("\"","")
+        host = create_lines[i].split("@")[1].split(" ")[0].replace("'", "").replace("\"","")
+
+        if "identified by" in create_lines[i].lower():
+            password = create_lines[i].split(" ")[-1].replace("'", "").replace("\"","").replace(";","")
+
+        for i in range(len(grant_lines)):
+            for j in range(len(grant_lines[i])):
+                if username in grant_lines[i][j] and host in grant_lines[i][j]:
+                    grants = grant_lines[i].split(" ")[1] 
+
+      #  print(grants)
+

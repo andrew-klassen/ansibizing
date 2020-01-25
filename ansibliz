@@ -4,6 +4,7 @@
 import os
 import shutil
 import argparse
+import pprint
 
 from module_scripts.config import *
 from module_scripts.apt import *
@@ -17,6 +18,7 @@ from module_scripts.file import *
 from module_scripts.web_download import * 
 from module_scripts.general_functions import *
 from module_scripts.unarchive import *
+from module_scripts.mysql import *
 
 
 # ansiblizes help page and arguments management
@@ -46,10 +48,8 @@ os.mkdir( cwd + "/playbook/history_files" )
 os.mkdir( cwd + "/playbook/roles/main" )
 os.mkdir( cwd + "/playbook/roles/main/tasks" )
 
-
 # main array of filtered commands
 lines = prep(cwd, args.user)
-
 
 if args.action == "create":
  
@@ -68,6 +68,8 @@ if args.action == "create":
     file_object.close()
 
     # ansible modules
+    mysql_users(lines,cwd)
+    exit()
     apt_key_add(lines,cwd)
     ppa_add(lines,cwd)
     apt(lines,cwd)

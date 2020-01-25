@@ -6,27 +6,57 @@ import subprocess
 import os
 import shutil
 import requests
+import pprint
 from os.path import expanduser
 
+def mysql_filter(mysql_lines):
+
+    try:
+        mysql_lines.remove("_HiStOrY_V2_")
+    except:
+        pass
+
+    while "exit;" in mysql_lines: 
+        mysql_lines.remove("exit;")
+
+    for i in range(len(mysql_lines)):
+        mysql_lines[i] = mysql_lines[i].replace("\\040", " ")
+    
+    return mysql_lines
 
 def set_history(cwd, user):
 
+    # user is assumed to be root if no user is provided
     history_file = "/root"
+    mysql_history_file = "/root"
 
-    if user is not None:
+
+    if user is not None and user != "root":
         history_file = find(user,"/home")
         history_file = history_file + "/.bash_history"
-        shutil.copyfile(history_file, cwd + "/playbook/history_files/bash_history")
 
+        mysql_history_file = find(user,"/home")
+        mysql_history_file = mysql_history_file + "/.mysql_history"
 
+    else:
+        history_file = history_file + "/.bash_history"
+        mysql_history_file = mysql_history_file + "/.mysql_history"
+
+    # set lines array
     if os.path.isfile(cwd + "/playbook/history_files/prep"):
         lines = [line.rstrip('\n') for line in open(cwd + "/playbook/history_files/prep")]
     else:
         lines = [line.rstrip('\n') for line in open(history_file)]
+        if os.path.isfile(mysql_history_file):
+            mysql_lines = [line.rstrip('\n') for line in open(mysql_history_file)]
+            mysql_lines = mysql_filter(mysql_lines)
+            #pprint(mysql_lines)
+            lines.extend(mysql_lines)
 
-
-    # lines in the .bash_history file into an array, one element per line
-    lines = [line.rstrip('\n') for line in open(history_file)]
+    # copies of history files are archived in case the user needs to reverse engineer
+    shutil.copyfile(history_file, cwd + "/playbook/history_files/bash_history")
+    if os.path.isfile(mysql_history_file):
+            shutil.copyfile(mysql_history_file, cwd + "/playbook/history_files/mysql_history")
 
     return lines
 
