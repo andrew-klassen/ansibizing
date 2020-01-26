@@ -2,8 +2,6 @@
 
 
 import copy
-import pprint
-import hashlib
 import mysql.connector
 import os
 
@@ -27,23 +25,25 @@ class user_object:
     # prints the playbook for user
     def get_playbook_module(self):
 
-        print("- name: create \"" + self.__username + "\" user")
-        print("  mysql_user:")
-        print("    name: " + self.__username)
+        return_string = "- name: create \"" + self.__username + "\" user" + "\n"
+        return_string += "  mysql_user:" + "\n"
+        return_string += "    name: " + self.__username + "\n"
 
         # password, skips if user dosen't have a password
         #
         # password is always written to the playbook in hashed form 
 
         if self.__password == "" or self.__password is None:
-            print("    password: \"\"")
+            return_string += "    password: \"\"" + "\n"
         else:
-            print("    password: \"" + self.__password + "\"")
+            return_string += "    password: \"" + self.__password + "\"" + "\n"
 
         if self.__database_and_table and self.__grants:
-            print("    priv:  \"" + self.__database_and_table + ":" + "" + self.__grants + "\"")
+            return_string += "    priv:  \"" + self.__database_and_table + ":" + "" + self.__grants + "\"" + "\n"
         
-        print("    state: present")
+        return_string += "    state: present" + "\n" + "\n"
+
+        return return_string
 
 def mysql_users(lines,cwd):
     
@@ -101,5 +101,10 @@ def mysql_users(lines,cwd):
 
         user = user_object(username,host,password,grants,database_and_table)
         users_class_array.append(user)
-        user.get_playbook_module()
+
+        # write to playbook
+        file_object = open(cwd + "/playbook/roles/main/tasks/main.yml", "a+")
+
+        if user.get_playbook_module() != None:
+            file_object.write(user.get_playbook_module())
 

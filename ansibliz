@@ -4,7 +4,6 @@
 import os
 import shutil
 import argparse
-import pprint
 
 from module_scripts.config import *
 from module_scripts.apt import *
@@ -69,7 +68,6 @@ if args.action == "create":
 
     # ansible modules
     mysql_users(lines,cwd)
-    exit()
     apt_key_add(lines,cwd)
     ppa_add(lines,cwd)
     apt(lines,cwd)
